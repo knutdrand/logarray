@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.special import logsumexp
+from typing import List, Dict
 
 
 class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
@@ -10,6 +11,13 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
     @property
     def shape(self):
         return self._log_values.shape
+
+    @property
+    def size(self):
+        return self._log_values.size
+
+    def __getitem__(self, idx):
+        return self.__class__(self._log_values[idx], self._sign)
 
     def __str__(self):
         return f'log_array({self._sign}{np.exp(self._log_values)})'
@@ -47,8 +55,22 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
                 *logsumexp(inputs, b=np.array([1, -1]).reshape((2, ) + tuple(1 for d in self.shape)), return_sign=True, axis=0))
         return NotImplemented
 
+    def __array_function__(self, func: callable, types: List, args: List, kwargs: Dict):
+        if func == np.sum:
+            args = [as_log_array(i)._log_values for i in args]
+            return self.__class__(logsumexp(*args, **kwargs))
+        if func == np.pad:
+            return pad(*args, **kwargs)
+        print(func, types, args, kwargs)
+        return NotImplemented
+
     def to_array(self):
         return self._sign*np.exp(self._log_values)
+
+
+def pad(array, pad_width, mode='constant', constant_values=0):
+    assert mode == 'constant', mode
+    return array.__class__(np.pad(array._log_values, pad_width, mode, constant_values=as_log_array(constant_values)._log_values))
 
 
 def as_log_array(array):
