@@ -36,8 +36,8 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
         """
         if method not in ("__call__"):
             return NotImplemented
-        if len(inputs) == 1:
-            return self.__class__(self._events, ufunc(self._values))
+        if ufunc == np.log:
+            return self._log_values
         assert len(inputs) == 2, f"Only unary and binary operations supported for runlengtharray {len(inputs)}"
         inputs = [as_log_array(i)._log_values for i in inputs]
         if ufunc == np.add:

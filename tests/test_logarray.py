@@ -42,6 +42,9 @@ def test_subtract_logarray(a, b):
     assert_allclose(result.to_array(), true)
 
 
+def test_log(a):
+    assert_allclose(np.log(log_array(a)), np.log(a))
+
+
 def test_sum(a):
     assert_allclose(np.sum(a), np.sum(log_array(a)).to_array())
-    
