@@ -16,6 +16,12 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
     def size(self):
         return self._log_values.size
 
+    def copy(self):
+        return self.__class__(self._log_values.copy(), self._sign)
+
+    def __len__(self):
+        return self.shape[0]
+
     def __getitem__(self, idx):
         return self.__class__(self._log_values[idx], self._sign)
 
