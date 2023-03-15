@@ -110,6 +110,7 @@ def sum(*args, **kwargs):
     args = [a._log_values for a in arrays]
     return LogArray(logsumexp(*args, **kwargs))
 
+
 @implements(np.zeros_like)
 def zeros_like(array):
-    pass
+    return LogArray(np.full_like(array._log_values, -np.inf))

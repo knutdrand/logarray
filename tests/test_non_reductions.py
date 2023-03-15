@@ -9,7 +9,7 @@ def simple_array():
     return np.arange(4)
 
 
-@pytest.mark.skip('fail')
+# @pytest.mark.skip('fail')
 def test_zeros_like(simple_array):
     assert_logarray_allclose(
         np.zeros_like(simple_array),
