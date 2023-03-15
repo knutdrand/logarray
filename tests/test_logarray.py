@@ -4,6 +4,7 @@
 
 import pytest
 from logarray.logarray import log_array
+from logarray.testing import assert_logarray_allclose, assert_logarray_allclose_log_space
 from numpy.testing import assert_allclose
 import numpy as np
 
@@ -21,25 +22,25 @@ def b():
 def test_add_logarray(a, b):
     true = a + b
     result = log_array(a) + log_array(b)
-    assert_allclose(result.to_array(), true)
+    assert_logarray_allclose(result, true)
 
 
 def test_multiply_logarray(a, b):
     true = a * b
     result = log_array(a) * log_array(b)
-    assert_allclose(result.to_array(), true)
+    assert_logarray_allclose(result, true)
 
 
 def test_divide_logarray(a, b):
     true = a / b
     result = log_array(a) / log_array(b)
-    assert_allclose(result.to_array(), true)
+    assert_logarray_allclose(result, true)
 
 
 def test_subtract_logarray(a, b):
     true = a - b
     result = log_array(a) - log_array(b)
-    assert_allclose(result.to_array(), true)
+    assert_logarray_allclose(result, true)
 
 
 def test_log(a):
