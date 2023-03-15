@@ -1,7 +1,19 @@
 import numpy as np
 from scipy.special import logsumexp
 from typing import List, Dict
-from .arrayfunctions import HANDLED_FUNCTIONS
+
+
+HANDLED_FUNCTIONS = {}
+
+
+def implements(np_function):
+    "Register an __array_function__ implementation for RaggedArray objects."
+
+    def decorator(func):
+        HANDLED_FUNCTIONS[np_function] = func
+        return func
+
+    return decorator
 
 
 class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
@@ -63,9 +75,6 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
         return NotImplemented
 
     def __array_function__(self, func: callable, types: List, args: List, kwargs: Dict):
-        if func == np.sum:
-            args = [as_log_array(i)._log_values for i in args]
-            return self.__class__(logsumexp(*args, **kwargs))
         if func == np.pad:
             return pad(*args, **kwargs)
 
@@ -96,3 +105,10 @@ def log_array(array):
         return array.copy()
     print('a', array)
     return LogArray(np.log(array))
+
+
+@implements(np.sum)
+def sum(*args, **kwargs):
+    arrays = [as_log_array(a) for a in args]
+    args = [a._log_values for a in arrays]
+    return LogArray(logsumexp(*args, **kwargs))
