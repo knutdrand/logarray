@@ -2,7 +2,7 @@ import numpy as np
 from scipy.special import logsumexp
 from typing import List, Dict
 
-
+# Will be filled in by methods decorated with implements
 HANDLED_FUNCTIONS = {}
 
 
@@ -69,7 +69,6 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             return self.__class__(
                 np.subtract(*inputs, **kwargs))
         if ufunc == np.subtract:
-            print(inputs)
             return self.__class__(
                 *logsumexp(inputs, b=np.array([1, -1]).reshape((2, ) + tuple(1 for d in self.shape)), return_sign=True, axis=0))
         return NotImplemented
@@ -84,6 +83,7 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
 
     def to_array(self):
         return self._sign*np.exp(self._log_values)
+
 
 @implements(np.pad)
 def pad(array, pad_width, mode='constant', constant_values=0):
