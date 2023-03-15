@@ -75,9 +75,6 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
         return NotImplemented
 
     def __array_function__(self, func: callable, types: List, args: List, kwargs: Dict):
-        if func == np.pad:
-            return pad(*args, **kwargs)
-
         if func in HANDLED_FUNCTIONS:
             return HANDLED_FUNCTIONS[func](*args, **kwargs)
         return NotImplemented
@@ -88,7 +85,7 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
     def to_array(self):
         return self._sign*np.exp(self._log_values)
 
-
+@implements(np.pad)
 def pad(array, pad_width, mode='constant', constant_values=0):
     assert mode == 'constant', mode
     return array.__class__(np.pad(array._log_values, pad_width, mode, constant_values=as_log_array(constant_values)._log_values))
