@@ -1,10 +1,11 @@
 import numpy as np
 from scipy.special import logsumexp
 from typing import List, Dict
+from .arrayfunctions import HANDLED_FUNCTIONS
 
 
 class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
-    def __init__(self, log_values=np.ndarray, sign: int = 1):
+    def __init__(self, log_values=np.ndarray, sign: np.ndarray = 1):
         self._log_values = log_values
         self._sign = sign
 
@@ -67,6 +68,11 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             return self.__class__(logsumexp(*args, **kwargs))
         if func == np.pad:
             return pad(*args, **kwargs)
+
+        if func in HANDLED_FUNCTIONS:
+            return HANDLED_FUNCTIONS[func](*args, **kwargs)
+        return NotImplemented
+        
         print(func, types, args, kwargs)
         return NotImplemented
 
@@ -88,4 +94,5 @@ def as_log_array(array):
 def log_array(array):
     if isinstance(array, LogArray):
         return array.copy()
+    print('a', array)
     return LogArray(np.log(array))
