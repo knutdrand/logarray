@@ -1,6 +1,7 @@
-from .fixtures import a, b, matrix, col_vector, row_vector
+#from .fixtures import a, b, matrix, col_vector, row_vector
 from logarray import log_array
 from logarray.testing import assert_logarray_allclose
+
 
 
 def test_matmul(row_vector, col_vector):
