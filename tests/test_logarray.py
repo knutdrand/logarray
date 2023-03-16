@@ -18,6 +18,7 @@ def a():
 def b():
     return np.array([10, 20, 30])
 
+
 @pytest.fixture
 def num():
     return 3.3
