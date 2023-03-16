@@ -17,7 +17,7 @@ def implements(np_function):
 
 
 class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
-    def __init__(self, log_values=np.ndarray, sign: np.ndarray = 1):
+    def __init__(self, log_values: np.ndarray, sign: np.ndarray = 1):
         self._log_values = log_values
         self._sign = sign
 
@@ -37,6 +37,13 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
 
     def __getitem__(self, idx):
         return self.__class__(self._log_values[idx], self._sign)
+
+    def __setitem__(self, key, value):
+        # TODO: handle sign
+        if isinstance(value, LogArray):
+            self._log_values[key] = value._log_values
+        else:
+            self._log_values[key] = np.log(value)
 
     def __str__(self):
         return f'log_array({self._sign}{np.exp(self._log_values)})'
