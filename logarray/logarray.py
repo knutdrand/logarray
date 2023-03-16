@@ -84,7 +84,7 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             return self.__class__(log_values, signs)
         if ufunc == np.matmul:
             return self.__class__(
-                logsumexp(a[..., np.newaxis]+b, axis=1))
+                logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :], axis=-2))
         return NotImplemented
 
     def __array_function__(self, func: callable, types: List, args: List, kwargs: Dict):
