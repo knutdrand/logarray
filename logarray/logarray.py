@@ -91,15 +91,20 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             return self.__class__(log_values, signs)
         if ufunc == np.matmul:
             axes = []
+            signa, signb = (np.atleast_1d(signa), np.atleast_1d(signb))
             if a.ndim == 1:
                 a = a[np.newaxis, ...]
+                signa = a[np.newaxis, ...]
                 axes.append(-2)
             if b.ndim == 1:
                 b = b[..., np.newaxis]
+                signb = signb[..., np.newaxis]
                 axes.append(-1)
-            res = logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :], axis=-2)
+            signs = signa[..., np.newaxis]*signb[..., np.newaxis, :, :]
+            res, signs = logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :], b=signs, return_sign=True, axis=-2)
             res = np.squeeze(res, axis=tuple(axes))
-            return self.__class__(res)
+            signs = np.squeeze(signs, axis=tuple(axes))
+            return self.__class__(res, signs)
                 
         return NotImplemented
 

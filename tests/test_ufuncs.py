@@ -8,9 +8,20 @@ import pytest
 def vector():
     return np.array([4, 5])
 
+
+@pytest.fixture
+def mixed_vector():
+    return np.array([4, -5])
+
+
 @pytest.fixture
 def vector3():
     return np.array([4, 5, 6])
+
+
+@pytest.fixture
+def mixed_vector3():
+    return np.array([-4, 5, -6])
 
 
 @pytest.fixture
@@ -36,6 +47,12 @@ def matrix23():
 @pytest.fixture
 def matrices():
     return np.arange(4*3*2).reshape(4, 2, 3)
+
+
+#n@pytest.fixture
+#def mixed_matrices(matrices):
+#    matrices[np.arange(matrices).size % 3] == 
+
 
 
 def test_matmul(row_vector, col_vector):
@@ -80,6 +97,12 @@ def test_matmul_vec_2(row_vector, vector):
     assert_logarray_allclose(result, my_result)
 
 
+def test_matmul_vec_2_mixed(row_vector, mixed_vector):
+    result = row_vector @ mixed_vector
+    my_result = log_array(row_vector) @ log_array(mixed_vector)
+    assert_logarray_allclose(result, my_result)
+
+
 def test_matmul_vec_3(col_vector, vector):
     result = vector @ col_vector
     my_result = log_array(vector) @ log_array(col_vector)
@@ -89,4 +112,10 @@ def test_matmul_vec_3(col_vector, vector):
 def test_matmuls_vec(matrices, vector3):
     result = matrices @ vector3
     my_result = log_array(matrices) @ log_array(vector3)
+    assert_logarray_allclose(result, my_result)
+
+
+def test_matmuls_vec_mixed(matrices, mixed_vector3):
+    result = matrices @ mixed_vector3
+    my_result = log_array(matrices) @ log_array(mixed_vector3)
     assert_logarray_allclose(result, my_result)
