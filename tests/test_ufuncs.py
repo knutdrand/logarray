@@ -49,10 +49,10 @@ def matrices():
     return np.arange(4*3*2).reshape(4, 2, 3)
 
 
-#n@pytest.fixture
-#def mixed_matrices(matrices):
-#    matrices[np.arange(matrices).size % 3] == 
-
+@pytest.fixture
+def mixed_matrices(matrices):
+    matrices.ravel()[np.arange(matrices.size) % 3 == 0] *= -1
+    return matrices
 
 
 def test_matmul(row_vector, col_vector):
@@ -118,4 +118,10 @@ def test_matmuls_vec(matrices, vector3):
 def test_matmuls_vec_mixed(matrices, mixed_vector3):
     result = matrices @ mixed_vector3
     my_result = log_array(matrices) @ log_array(mixed_vector3)
+    assert_logarray_allclose(result, my_result)
+
+
+def test_matmuls_vec_mixedboth(mixed_matrices, mixed_vector3):
+    result = mixed_matrices @ mixed_vector3
+    my_result = log_array(mixed_matrices) @ log_array(mixed_vector3)
     assert_logarray_allclose(result, my_result)

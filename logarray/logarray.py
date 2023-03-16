@@ -91,17 +91,18 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             return self.__class__(log_values, signs)
         if ufunc == np.matmul:
             axes = []
-            signa, signb = (np.atleast_1d(signa), np.atleast_1d(signb))
+            signa, signb = (np.broadcast_to(signa, a.shape), np.broadcast_to(signb, b.shape))
             if a.ndim == 1:
                 a = a[np.newaxis, ...]
-                signa = a[np.newaxis, ...]
+                signa = signa[np.newaxis, ...]
                 axes.append(-2)
             if b.ndim == 1:
                 b = b[..., np.newaxis]
                 signb = signb[..., np.newaxis]
                 axes.append(-1)
             signs = signa[..., np.newaxis]*signb[..., np.newaxis, :, :]
-            res, signs = logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :], b=signs, return_sign=True, axis=-2)
+            res, signs = logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :],
+                                   b=signs, return_sign=True, axis=-2)
             res = np.squeeze(res, axis=tuple(axes))
             signs = np.squeeze(signs, axis=tuple(axes))
             return self.__class__(res, signs)
@@ -111,9 +112,6 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
     def __array_function__(self, func: callable, types: List, args: List, kwargs: Dict):
         if func in HANDLED_FUNCTIONS:
             return HANDLED_FUNCTIONS[func](*args, **kwargs)
-        return NotImplemented
-        
-        print(func, types, args, kwargs)
         return NotImplemented
 
     def to_array(self):
