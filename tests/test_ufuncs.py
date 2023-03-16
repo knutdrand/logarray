@@ -41,7 +41,6 @@ def test_matmul_outer(row_vector, col_vector):
     assert_logarray_allclose(result, my_result)
 
 
-
 def test_matmul2(row_vector, matrix23):
     result = row_vector @ matrix23
     my_result = log_array(row_vector) @ log_array(matrix23)
