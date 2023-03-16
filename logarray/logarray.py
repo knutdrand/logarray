@@ -83,8 +83,6 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             log_values, signs = sub_log_space(a, signa, b, signb)
             return self.__class__(log_values, signs)
         if ufunc == np.matmul:
-            a, b = inputs
-            print(np.add.outer(*inputs).shape)
             return self.__class__(
                 logsumexp(a[..., np.newaxis]+b, axis=1))
         return NotImplemented
@@ -116,7 +114,7 @@ def as_log_array(array):
 def log_array(array: ArrayLike) -> LogArray:
     """Create a `LogArray` from an array
 
-    If `array` is a LogArray, make a copy of it 
+    If `array` is a LogArray, make a copy of it
 
     Parameters
     ----------
