@@ -18,6 +18,10 @@ def a():
 def b():
     return np.array([10, 20, 30])
 
+@pytest.fixture
+def num():
+    return 3.3
+
 
 def test_add_logarray(a, b):
     true = a + b
@@ -40,6 +44,11 @@ def test_divide_logarray(a, b):
 def test_subtract_logarray(a, b):
     true = a - b
     result = log_array(a) - log_array(b)
+    assert_logarray_allclose(result, true)
+
+def test_exponentiate_logarray(a, num):
+    true = a**num
+    result = log_array(a)**num
     assert_logarray_allclose(result, true)
 
 
