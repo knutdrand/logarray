@@ -5,6 +5,11 @@ import pytest
 
 
 @pytest.fixture
+def vector():
+    return np.array([4, 5])
+
+
+@pytest.fixture
 def row_vector():
     return np.array([[1, 2]])
 
@@ -30,6 +35,13 @@ def test_matmul(row_vector, col_vector):
     assert_logarray_allclose(result, my_result)
 
 
+def test_matmul_outer(row_vector, col_vector):
+    result = col_vector @ row_vector
+    my_result = log_array(col_vector) @ log_array(row_vector)
+    assert_logarray_allclose(result, my_result)
+
+
+
 def test_matmul2(row_vector, matrix23):
     result = row_vector @ matrix23
     my_result = log_array(row_vector) @ log_array(matrix23)
@@ -39,4 +51,10 @@ def test_matmul2(row_vector, matrix23):
 def test_matmuls(row_vector, matrices):
     result = row_vector @ matrices
     my_result = log_array(row_vector) @ log_array(matrices)
+    assert_logarray_allclose(result, my_result)
+
+
+def test_matmul_vec(vector):
+    result = vector @ vector
+    my_result = log_array(vector) @ log_array(vector)
     assert_logarray_allclose(result, my_result)

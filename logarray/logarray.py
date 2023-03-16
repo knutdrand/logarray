@@ -83,6 +83,10 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
             log_values, signs = sub_log_space(a, signa, b, signb)
             return self.__class__(log_values, signs)
         if ufunc == np.matmul:
+            if a.ndim == 1:
+                a = a[np.newaxis, ...]
+            if b.ndim == 1:
+                b = b[..., np.newaxis]
             return self.__class__(
                 logsumexp(a[..., np.newaxis]+b[..., np.newaxis, :, :], axis=-2))
         return NotImplemented
