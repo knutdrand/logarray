@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.typing import ArrayLike
 from scipy.special import logsumexp
 from typing import List, Dict
 from .util import signed_log, add_log_space, sub_log_space, mul_log_space, div_log_space, power_log_space, sign_collapse
@@ -41,6 +42,9 @@ class LogArray(np.lib.mixins.NDArrayOperatorsMixin):
 
     def __str__(self):
         return f'log_array({self.to_array()})'
+
+    def __repr__(self):
+        return f'log_{repr(self.to_array())}'
 
     def __array_ufunc__(self, ufunc: callable, method: str, *inputs, **kwargs):
         """Handle numpy unfuncs called on the runlength array
@@ -109,11 +113,32 @@ def as_log_array(array):
     return log_array(array)
 
 
-def log_array(array):
+def log_array(array: ArrayLike) -> LogArray:
+    """Create a `LogArray` from an array
+
+    If `array` is a LogArray, make a copy of it 
+
+    Parameters
+    ----------
+    array : ArrayLike
+        Array with values in linear space
+
+    Returns
+    -------
+    LogArray
+        LogArray representing the values in `array`
+
+    Examples
+    --------
+    >>> from logarray import log_array
+    >>> a = log_array([1., 2., 3.])
+    >>> a
+    log_array([1., 2., 3.])
+    """
+
     if isinstance(array, LogArray):
         return array.copy()
-    #print('a', array)
-    log_values, signs = signed_log(array)
+    log_values, signs = signed_log(np.asanyarray(array))
     return LogArray(log_values, signs)
 
 
