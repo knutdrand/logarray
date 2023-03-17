@@ -4,8 +4,8 @@ from logarray import log_array
 from logarray.testing import assert_logarray_allclose
 import pytest
 
-array_functions = [np.sum]
-array_functions_future = [np.product]
+array_functions = [np.sum, np.product]
+array_functions_future = [np.nansum]
 test_arrays = [np.array([1,2,3]), np.array([-1,-2,-3]), np.array([1,2,-3])]
 @pytest.mark.skip('fail')
 @pytest.mark.parametrize("regular", test_arrays)
@@ -32,6 +32,6 @@ def test_array_function(regular, array_func):
 
 @pytest.mark.parametrize("array_func", array_functions_future)
 @pytest.mark.parametrize("regular", test_arrays)
-@pytest.mark.xfail('fail')
+@pytest.mark.xfail
 def test_array_function_future(regular, array_func):
     _test_array_function(regular, array_func)

@@ -165,6 +165,11 @@ def sum(array, **kwargs):
     s, signs = logsumexp(array._log_values, b = array._signs, return_sign = True, **kwargs)
     return LogArray(s, sign_collapse(signs))
 
+@implements(np.product)
+def product(array, **kwargs):
+    # TODO This function is not called when you sum a list of LogArrays, and does not work for array of LogArrays !?
+    prod = np.sum(array._log_values, **kwargs)
+    return LogArray(prod, np.product(array._signs, **kwargs))
 
 @implements(np.zeros_like)
 def zeros_like(array):

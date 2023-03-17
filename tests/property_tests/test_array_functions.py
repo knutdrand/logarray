@@ -36,6 +36,6 @@ def test_array_function(regular, array_func):
 
 @given(regular=valid_arrays(), array_func=st.sampled_from(array_functions_future))
 @example(array_func=np.sum, regular=np.array([1,1,1,1]))
-@pytest.mark.skip('fail')
+@pytest.mark.xfail
 def test_array_function_future(regular, array_func):
     _test_array_function(regular, array_func)
