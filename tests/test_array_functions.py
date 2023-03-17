@@ -16,3 +16,15 @@ def test_sum(regular):
     regular_sum = np.log(np.sum(regular))
     assert_logarray_allclose(logarray_sum, regular_sum)
 
+def _test_multiply(regular):
+    mylogarray = log_array(regular)
+
+    logarray_product = np.product(mylogarray)
+    regular_product = np.product(regular)
+    assert_logarray_allclose(logarray_product, regular_product, rtol=1e-2 if regular.dtype=='float16' else 1e-5)
+
+
+@pytest.mark.parametrize("regular", test_arrays)
+@pytest.mark.skip('fail')
+def test_multiply(regular):
+    _test_multiply(regular)

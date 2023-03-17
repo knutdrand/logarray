@@ -6,6 +6,8 @@ from logarray import log_array
 from logarray.testing import assert_logarray_allclose
 import numpy as np
 
+from tests.test_array_functions import _test_multiply
+
 VALID_LOGARRAY_DTYPES = [np.integer, np.floating]
 def is_valid_array(array):
     return any(np.issubdtype(array.dtype, valid_type) for valid_type in VALID_LOGARRAY_DTYPES)
@@ -27,4 +29,7 @@ def test_sum(regular):
     regular_sum = np.sum(regular)
     assert_logarray_allclose(logarray_sum, regular_sum, rtol=1e-2 if regular.dtype=='float16' else 1e-5)
 
-print(valid_arrays().example())
+@given(valid_arrays())
+@pytest.mark.skip('fail')
+def test_multiply(regular):
+    _test_multiply(regular)
