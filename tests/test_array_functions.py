@@ -7,7 +7,7 @@ import pytest
 array_functions = [np.sum, np.product]
 array_functions_future = [np.nansum]
 test_arrays = [np.array([1,2,3]), np.array([-1,-2,-3]), np.array([1,2,-3])]
-@pytest.mark.skip('fail')
+@pytest.mark.xfail
 @pytest.mark.parametrize("regular", test_arrays)
 def test_sum(regular):
     mylogarray = log_array(regular)
